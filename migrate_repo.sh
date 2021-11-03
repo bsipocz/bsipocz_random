@@ -18,3 +18,19 @@ fi
 gh repo create --private --confirm ${remote_repo}
 git push --all origin
 git push --tags origin
+
+# If there are multiple branches, the previous repo creation will make the
+# first one default, the following ensures we don't leave the repo in that state
+
+if [[ -z $DEFAULT_BRANCH_NAME ]];then
+    for branch in main master; do
+        if [[ -z $(git branch --list $branch) ]]; then
+            continue
+        else
+            DEFAULT_BRANCH_NAME=${branch}
+            break
+        fi
+    done
+fi
+
+gh api -XPATCH repos/:owner/:repo -f default_branch=${DEFAULT_BRANCH_NAME} > /dev/null
