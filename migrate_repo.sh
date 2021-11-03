@@ -1,4 +1,8 @@
-repo_name=$(basename $(pwd))
+if [[ -z $EXTENSION ]]; then
+    EXTENSION=.git
+fi
+
+repo_name=$(basename $(pwd) ${EXTENSION})
 
 if [[ -z $ORG_NAME ]]; then
     remote_repo=${repo_name}
